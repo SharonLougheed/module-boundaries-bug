@@ -1,5 +1,25 @@
 # ModuleBoundariesBug
 
+## To Reproduce:
+
+### CLI
+
+1. Clone https://github.com/SharonLougheed/module-boundaries-bug
+2. `npm install`
+3. `npx nx lint libA`
+4. Observe: 0 lint errors reported, process crashes with `ENOENT: no such file or directory, open '.../libs/libB/src/lib/*'`
+5. Note that `libs/libA/src/lib/componentA/utils.ts` has 7 obvious lint violations and `LibA.ts` has additional `no-unused-vars` / `no-debugger` violations — all completely hidden by the crash.
+
+### IDE (VS Code with ESLint extension)
+
+6. Open the project in VS Code.
+7. Open `libs/libA/src/lib/componentA/LibA.ts` — this file has the crashing import (line 3), plus `const unused = 42` and `debugger` which should be flagged.
+8. Check the Problems panel: **0 ESLint errors** for `LibA.ts`. The crash hides everything.
+9. Open `libs/libA/src/lib/componentA/utils.ts` — lint errors appear normally in the Problems panel.
+10. This makes the linter appear to be working, even though `LibA.ts` diagnostics are silently lost.
+
+
+
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
 ✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
